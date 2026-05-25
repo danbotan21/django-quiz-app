@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.sqlite3
+db.sqlite3
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+dist/
+build/
+*.log

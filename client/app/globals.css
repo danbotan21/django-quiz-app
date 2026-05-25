@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(225, 222, 219);
+  width: 100%;
+  height: 100vh;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-icon {
+  color: black;
+  position: absolute;
+  top: 1.35rem;
+  right: 0.8rem;
+}
+
+.box-quiz-list {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(194, 27, 223),
+    rgb(224, 14, 18)
+  );
+  padding: 4rem 6rem;
+  margin-top: 200px;
+}
+
+.score-to-pass {
+  color: rgb(68, 110, 4);
+  font-weight: 700;
+}
+
+.content-quizes {
+  padding: 2rem 2rem;
+  text-align: left;
+}

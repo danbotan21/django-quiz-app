@@ -1,5 +1,7 @@
 'use client'
 import axios from 'axios'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 import { useState, useEffect } from 'react'
 import '../../../public/styles/quizPage.css'
 
@@ -34,8 +36,8 @@ const TestPages = ({ params }) => {
       try {
         setLoading(true)
         const [quizRes, questionsRes] = await Promise.all([
-          axios.get('http://localhost:8000/quiz/', { params: { id } }),
-          axios.get('http://localhost:8000/questions/', { params: { id } }),
+          axios.get(`${API_URL}/quiz/`, { params: { id } }),
+          axios.get(`${API_URL}/questions/`, { params: { id } }),
         ])
 
         setQuiz(quizRes.data)

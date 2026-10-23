@@ -1,6 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
 import Image from 'next/image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCoffee } from '@fortawesome/free-solid-svg-icons'
@@ -20,7 +22,7 @@ const Home = () => {
     setLoading(true)
     setError(null)
     try {
-      const response = await axios.get(`http://localhost:8000/searchQuizes/`, {
+      const response = await axios.get(`${API_URL}/searchQuizes/`, {
         params: {
           search: searchText,
         },

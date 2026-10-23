@@ -9,18 +9,12 @@ from .serializer import QuizSerializer, QuizQuestionSerializer, QuizAnswerSerial
 
 
 class SearchForQuizes(viewsets.ModelViewSet):
-    """Search quizzes by title"""
+    """List all quizzes, or only the ones whose title contains ?search="""
     serializer_class = QuizSerializer
     queryset = Quiz.objects.all()
 
     def list(self, request, *args, **kwargs):
         text_search_bar = request.GET.get('search', '').strip()
-
-        if not text_search_bar:
-            return Response(
-                {'quizzes': []},
-                status=status.HTTP_200_OK
-            )
 
         quizes = Quiz.objects.filter(titleQuiz__icontains=text_search_bar)
         serializer = QuizSerializer(quizes, many=True)

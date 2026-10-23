@@ -35,6 +35,20 @@ DEMO_QUIZZES = [
         ('Which file lists paths Git should not track?', '.gitignore', ['.gitkeep', '.gitconfig', '.gitattributes']),
         ('Which command undoes a pushed commit safely?', 'git revert', ['git reset --hard', 'git rm', 'git clean']),
     ]),
+    ('HTML & CSS', 'easy', 5, 50, [
+        ('Which tag creates a link?', '<a>', ['<link>', '<href>', '<url>']),
+        ('Which CSS property changes the text color?', 'color', ['font-color', 'text-color', 'foreground']),
+        ('Which display value puts items in a flexible row or column?', 'flex', ['block', 'inline', 'table']),
+        ('Which unit is relative to the root font size?', 'rem', ['em', 'px', 'vh']),
+        ('Which tag holds the main content of a page?', '<main>', ['<body>', '<section>', '<content>']),
+    ]),
+    ('React Basics', 'hard', 8, 70, [
+        ('Which hook stores local component state?', 'useState', ['useEffect', 'useRef', 'useMemo']),
+        ('When does useEffect with an empty dependency array run?', 'Once, after the first render', ['On every render', 'Before the first render', 'Never']),
+        ('What must every item in a rendered list have?', 'A unique key prop', ['An id attribute', 'A className', 'A ref']),
+        ('How do you pass data from a parent to a child?', 'Props', ['State', 'Context only', 'Refs']),
+        ('What does JSX compile to?', 'React.createElement calls', ['HTML strings', 'Web components', 'JSON']),
+    ]),
 ]
 
 

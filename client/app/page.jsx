@@ -3,131 +3,132 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-import Image from 'next/image'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+
+const DIFFICULTY_STYLES = {
+  easy: 'bg-emerald-100 text-emerald-700',
+  medium: 'bg-amber-100 text-amber-700',
+  hard: 'bg-rose-100 text-rose-700',
+}
 
 const Home = () => {
   const [searchQuiz, setSearchQuiz] = useState('')
-  const [filteredQuizzes, setFilteredQuizzes] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [quizzes, setQuizzes] = useState([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const getQuiz = async (searchText) => {
-    if (!searchText.trim()) {
-      setFilteredQuizzes([])
-      return
-    }
-
+  const getQuizzes = async (searchText) => {
     setLoading(true)
     setError(null)
     try {
       const response = await axios.get(`${API_URL}/searchQuizes/`, {
-        params: {
-          search: searchText,
-        },
+        params: { search: searchText.trim() },
       })
-      setFilteredQuizzes(response.data || [])
+      setQuizzes(response.data || [])
     } catch (error) {
       console.error('Error fetching data:', error)
-      setError('Failed to fetch quizzes. Please try again.')
-      setFilteredQuizzes([])
+      setError('Could not load quizzes. Is the Django server running?')
+      setQuizzes([])
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      getQuiz(searchQuiz)
-    }, 300) // Debounce search
-
+    const timer = setTimeout(() => getQuizzes(searchQuiz), 300) // Debounce search
     return () => clearTimeout(timer)
   }, [searchQuiz])
 
   return (
-    <div className='parent'>
-      <div className='heading w-full'>
-        <h1 className='text-5xl text-center font-bold mb-4 mr-2 mt-10'>
-          All Quizzes
+    <main className='mx-auto max-w-6xl px-6 pb-16'>
+      <header className='flex items-center gap-3 py-6'>
+        <span className='flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 text-white'>
+          <i className='fa-solid fa-circle-question'></i>
+        </span>
+        <span className='text-xl font-bold text-slate-800'>QuizApp</span>
+      </header>
+
+      <section className='mt-6 text-center'>
+        <h1 className='text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl'>
+          Test your knowledge
         </h1>
-      </div>
+        <p className='mx-auto mt-3 max-w-xl text-lg text-slate-500'>
+          Pick a quiz, beat the timer and see which answers you got right.
+        </p>
 
-      <div className='flex justify-center'>
-        <div className='box-quiz-list rounded-2xl shadow-md my-8'>
-          <div className='flex justify-center relative mb-4'>
-            <form onSubmit={(e) => e.preventDefault()}>
-              <span className='search'>
-                <input
-                  type='text'
-                  placeholder='Search quizzes... '
-                  className='py-4 px-8 mb-4 rounded-2xl border border-gray-300'
-                  value={searchQuiz}
-                  onChange={(e) => setSearchQuiz(e.target.value)}
-                />
-                <i className='search-icon fa-solid fa-magnifying-glass'></i>
-              </span>
-            </form>
-          </div>
-
-          {error && (
-            <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4'>
-              {error}
-            </div>
-          )}
-
-          {loading && <p className='text-center py-4'>Loading quizzes...</p>}
-
-          {/* Quizzes template */}
-          <ul className='grid gap-8 grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1'>
-            {filteredQuizzes && filteredQuizzes.length > 0
-              ? filteredQuizzes.map((quiz) => (
-                  <div
-                    className='content-quizes bg-blue-200 rounded-md shadow-md'
-                    key={quiz.id}
-                  >
-                    <a href={`quiz/${quiz.id}`}>
-                      <h2 className='text-2xl font-semibold mb-2 '>
-                        {quiz.titleQuiz}
-                      </h2>
-                    </a>
-                    <p className='text-lg mb-2'>
-                      Number of questions:
-                      <span className='text-yellow-600 ml-1 text-xl'>
-                        {quiz.numberOfQuestions}
-                      </span>
-                    </p>
-                    <p className='text-base mb-2'>
-                      Difficulty:
-                      <span
-                        className={` ${
-                          quiz.difficulty === 'medium' ? 'text-blue-500' : ''
-                        }  
-                      ${quiz.difficulty === 'hard' ? 'text-red-500' : ''}
-                      ${quiz.difficulty === 'easy' ? 'text-yellow-700' : ''}
-                       text-lg hover:underline mt-2 ml-1`}
-                      >
-                        {quiz.difficulty}
-                      </span>
-                    </p>
-                    <p className='text-base mb-2'>
-                      Time:
-                      <span className='text-xl ml-2'>{quiz.time} min</span>
-                    </p>
-                    <p className='score-to-pass'>
-                      Score to pass: {quiz.scoreToPass}%
-                    </p>
-                  </div>
-                ))
-              : !loading && (
-                  <p className='text-center py-4'>
-                    No quizzes found. Try searching.
-                  </p>
-                )}
-          </ul>
+        <div className='relative mx-auto mt-8 max-w-lg'>
+          <i className='fa-solid fa-magnifying-glass absolute left-5 top-1/2 -translate-y-1/2 text-slate-400'></i>
+          <input
+            type='text'
+            placeholder='Search quizzes...'
+            className='w-full rounded-full border border-slate-200 bg-white py-4 pl-12 pr-6 text-slate-800 shadow-sm outline-none transition focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100'
+            value={searchQuiz}
+            onChange={(e) => setSearchQuiz(e.target.value)}
+          />
         </div>
-      </div>
-    </div>
+      </section>
+
+      {error && (
+        <div className='mx-auto mt-8 max-w-lg rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-center text-rose-700'>
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && quizzes.length === 0 && (
+        <p className='mt-12 text-center text-slate-500'>
+          No quizzes match &quot;{searchQuiz}&quot;.
+        </p>
+      )}
+
+      <ul className='mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        {quizzes.map((quiz) => (
+          <li
+            key={quiz.id}
+            className='flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg'
+          >
+            <div className='flex items-start justify-between gap-3'>
+              <h2 className='text-xl font-semibold text-slate-900'>
+                {quiz.titleQuiz}
+              </h2>
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                  DIFFICULTY_STYLES[quiz.difficulty] || ''
+                }`}
+              >
+                {quiz.difficulty}
+              </span>
+            </div>
+
+            <dl className='mb-6 mt-5 grid grid-cols-3 gap-2 text-center'>
+              <div className='rounded-xl bg-slate-50 py-3'>
+                <dt className='text-xs text-slate-500'>Questions</dt>
+                <dd className='text-lg font-semibold text-slate-800'>
+                  {quiz.numberOfQuestions}
+                </dd>
+              </div>
+              <div className='rounded-xl bg-slate-50 py-3'>
+                <dt className='text-xs text-slate-500'>Time</dt>
+                <dd className='text-lg font-semibold text-slate-800'>
+                  {quiz.time} min
+                </dd>
+              </div>
+              <div className='rounded-xl bg-slate-50 py-3'>
+                <dt className='text-xs text-slate-500'>To pass</dt>
+                <dd className='text-lg font-semibold text-slate-800'>
+                  {quiz.scoreToPass}%
+                </dd>
+              </div>
+            </dl>
+
+            <a
+              href={`quiz/${quiz.id}`}
+              className='mt-auto rounded-xl bg-indigo-600 py-3 text-center font-semibold text-white transition hover:bg-indigo-700'
+            >
+              Start quiz
+            </a>
+          </li>
+        ))}
+      </ul>
+    </main>
   )
 }
 

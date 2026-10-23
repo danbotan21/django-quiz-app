@@ -2,6 +2,8 @@
 
 A quiz platform where you pick a topic, answer timed multiple-choice questions and get a detailed result page that shows which answers were right, which were wrong and whether you passed.
 
+![Taking a quiz from start to finish](docs/demo.gif)
+
 ![Quiz list](docs/screenshots/home.png)
 
 | Answering a question | Results |
